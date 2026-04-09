@@ -1,15 +1,22 @@
-import sys
 from src.alert_date import alert_date_calculator
-from src.data_file import write_on_file
+from src.data_file import write_on_file, read_file
 
-if len(sys.argv) >= 2:
-    try:
-        input_date = sys.argv[1]
+try:
+    action = input("cosa vuoi fare? \n1. per aggiungere un nuovo compito \n2. per vedere i compiti presenti\n")
+    if action == "1":
+        title = input("get the title:")
+        description = input("get the description:")
+        input_date = input("get the date:")
         ad =  alert_date_calculator(input_date)
-        print(ad)
-        write_on_file("compiti.txt", ad)
-    except  ValueError as e:
-        print(f"Please provide a valid alert date as a command-line argument.{e}")
-else:
-    print("Please provide the alert date as a command-line argument.")
-
+        print()
+        # print(input_date + ";" + ad + ";" + title + ";" + description)
+        write_on_file("compiti.txt", ad + ";" + title + ";" + description)
+        print(f"new event added. You will be alerted on {ad}")
+    else: 
+        print()
+        print(read_file("compiti.txt"))
+    print()
+except  ValueError as e:
+    print(f"Please provide a valid date: {e}")
+except  FileNotFoundError as e:
+    print("no events")  

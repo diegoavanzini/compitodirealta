@@ -6,4 +6,4 @@ sistema per la gestione dei compiti
 [x] calcolo della data di alert  
 [x] unit test  
 [x] persistenza  
-[ ] persistenza strutturata  
+[x] persistenza strutturata  
