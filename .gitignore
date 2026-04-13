@@ -66,3 +66,6 @@ gpg.key
 .vscode/
 .direnv/
 .gopath/
+
+credentials.json
+token.json

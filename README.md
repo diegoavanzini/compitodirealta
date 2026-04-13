@@ -1,78 +1,96 @@
 ## Gestione compiti
 
-Applicazione Python da terminale per inserire e consultare compiti con una data di alert automatica.
-Il progetto ha scopo didattico: e pensato per esercitarsi con Python, gestione date, persistenza su file e test unitari.
-Il progetto salva i dati su file di testo e include test unitari per le funzioni principali.
+Applicazione Python da terminale per creare eventi su Google Calendar.
+Il progetto nasce come esercizio didattico su Python, gestione date, persistenza locale e integrazione API esterne.
 
-## Obiettivo
+## Stato attuale
 
-Consentire una gestione semplice dei compiti con:
-- inserimento di titolo e descrizione;
-- data di esecuzione;
-- calcolo della data di avviso (1 giorno prima);
-- persistenza locale su file.
+Il flusso principale e ora basato su Google Calendar:
 
-## Funzionalita implementate
+- inizializzazione client Calendar con OAuth2;
+- creazione di un evento da CLI;
+- salvataggio e riuso del token locale;
+- test unitari ancora presenti per i moduli storici di logica data/file.
 
-- Inserimento di un nuovo compito da CLI.
-- Lettura e visualizzazione dei compiti salvati.
-- Calcolo automatico della data di alert.
-- Validazione della data (non puo essere nel passato).
-- Salvataggio strutturato su file `compiti.txt`.
-- Test unitari con `pytest`.
+## Prerequisiti
 
-## Struttura del progetto
+- Python 3.10+
+- ambiente virtuale attivo (consigliato)
+- credenziali OAuth Google Calendar in `credentials.json`
+- file `token.json` generato al primo login
 
-- `main.py`: punto di ingresso dell'applicazione da terminale.
-- `src/alert_date.py`: logica per il calcolo della data di alert.
-- `src/data_file.py`: funzioni di lettura/scrittura file.
-- `tests/test_alert_date_calculator.py`: test sul calcolo della data.
-- `tests/test_data_file.py`: test su persistenza file.
-- `compiti.txt`: archivio dei compiti.
+Dipendenze principali usate nel codice:
 
-## Formato dei dati
+- `google-auth`
+- `google-auth-oauthlib`
+- `google-api-python-client`
+- `pytest` (per i test)
 
-Ogni riga in `compiti.txt` rappresenta un compito nel formato:
+## Configurazione Google Calendar
 
-`data_alert;titolo;descrizione`
+1. Crea un progetto Google Cloud e abilita Google Calendar API.
+2. Crea credenziali OAuth Client (Desktop app).
+3. Scarica il file credenziali e salvalo come `credentials.json` nella root del progetto.
+4. Al primo avvio si aprira il browser per autorizzare l'accesso.
+5. Al termine verra creato `token.json` per i successivi avvii.
 
-Esempio:
+Nota: se cambi gli scope OAuth, elimina `token.json` e ripeti il login.
 
-`11/04/2026;Consegna progetto;Preparare presentazione finale`
+## Come eseguire
 
-## Come eseguire il progetto
+Con Makefile:
 
-1. Attiva l'ambiente virtuale (se presente).
-2. Avvia l'applicazione:
+```bash
+make run
+```
+
+Oppure direttamente:
 
 ```bash
 python main.py
 ```
 
-3. Scegli:
-- `1` per aggiungere un compito;
-- `2` per visualizzare i compiti esistenti.
+Durante l'esecuzione:
 
-## Eseguire i test
+- `1`: richiede titolo, descrizione e data (`dd/mm/yyyy hh:mm`) e crea un evento su calendario `primary`
+- `q`: esce dal programma
+
+## Test
+
+```bash
+make test
+```
+
+oppure:
 
 ```bash
 pytest -q
 ```
 
+## Struttura progetto
+
+- `main.py`: entrypoint CLI e invocazione classe Calendar
+- `src/gcalendar.py`: classe `google_calendar` con autenticazione e creazione eventi
+- `src/alert_date.py`: logica storica per calcolo data alert
+- `src/data_file.py`: logica storica di persistenza su file
+- `tests/test_alert_date_calculator.py`: test modulo date
+- `tests/test_data_file.py`: test modulo file
+- `compiti.txt`: archivio locale storico
+- `credentials.json`: credenziali OAuth (locale)
+- `token.json`: token OAuth generato al primo accesso
+
 ## Stato sviluppo
 
-- [x] inserimento di un compito
-- [x] calcolo della data di alert
-- [x] unit test
-- [x] persistenza
-- [x] persistenza strutturata
-- [x] README completo
-- [x] crea Makefile
-- [ ] aggiungere modifica evento
-- [ ] aggiungere cancellazione evento
-- [ ] aggiungere sito web con form di inserimento
-- [ ] aggiungere configurazione sistemi di notifica
-- [ ] aggiungere configurazione notifiche ricorrenti
-- [ ] aggiungere integrazione email
-- [ ] aggiungere integrazione alexa
-- [ ] aggiungere configurazione notifica a piu utenti
+- [x] inserimento compito/evento da CLI
+- [x] integrazione Google Calendar
+- [x] creazione evento su calendario primary
+- [x] test unitari moduli storici
+- [x] Makefile (`run`, `test`, `clean`)
+- [ ] modifica evento Google Calendar
+- [ ] cancellazione evento Google Calendar
+- [ ] interfaccia web per inserimento
+- [ ] configurazione sistemi di notifica
+- [ ] notifiche ricorrenti avanzate
+- [ ] integrazione email
+- [ ] integrazione Alexa
+- [ ] notifica multi-utente
