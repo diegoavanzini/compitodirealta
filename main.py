@@ -1,5 +1,5 @@
+import shelve
 from src import gcalendar
-
 
 from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
@@ -18,9 +18,15 @@ def main():
         description = input("get the description:")
         input_date = input("get the date (dd/mm/yyyy hh:mm):")
 
-    inserted_event = cal.AddEvent(title, description, input_date)
-
+    inserted_event = cal.add_event(title, description, input_date)
     print(f"Event created: {inserted_event}")
+
+    db = shelve.open('events')
+
+    print(f"Event from db: {db[title]}")
+
+    db.close()
+    
 
 
 

@@ -36,7 +36,7 @@ class google_calendar():
         except HttpError as error:
             print(f"An error occurred: {error}")
 
-    def AddEvent(self, title, description, input_date):
+    def add_event(self, title, description, input_date):
         startDate = datetime.datetime.strptime(input_date, "%d/%m/%Y %H:%M").date()
         endDate = startDate - datetime.timedelta(minutes=30)
         event = {
@@ -94,3 +94,6 @@ class google_calendar():
         return events
         # for event in events:
         #  start = event["start"].get("dateTime", event["start"].get("date"))
+    def delete_event(self, event_id):
+        event = self.service.events().delete(calendarId='primary', eventId=event_id).execute()
+        print(f"Event {event['id']} modified successfully.")
