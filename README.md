@@ -92,6 +92,7 @@ pytest -q
 - [ ] aggiungi evento con data, titolo e descrizione
 - [ ] cancella evento
 - [ ] modifica evento
+- [ ] aggiungi multi lingua
 - [ ] configurazione sistemi di notifica
 - [ ] notifiche ricorrenti avanzate
 - [ ] integrazione email

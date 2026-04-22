@@ -13,11 +13,11 @@ def index():
 
 @app.route('/add', methods=['POST'])
 def add_task():
-    new_task = request.form.get('newTask')
-    if new_task:
-        startDate = datetime.datetime.now() + datetime.timedelta(days=1)
-        when = startDate.strftime("%d/%m/%Y %H:%M")
-        cal.add_event(new_task, new_task, when )
+    task_title = request.form.get('title')
+    task_description = request.form.get('description')
+    task_when = request.form.get('when')
+    if task_when:
+        cal.add_event(task_title, task_description, task_when)
     return redirect(url_for('index'))
 
 @app.route('/complete', methods=['POST'])
