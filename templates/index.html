@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Homework List App</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+<body>
+    <h1>Welcome to My Homework List App!</h1>
+    <!-- Add this form below the task list in index.html -->
+    <form method="POST" action="{{ url_for('add_task') }}">
+        <label for="newTask">Add Homework:</label>
+        <input type="text" id="newTask" name="newTask" required>
+        <button type="submit">Add</button>
+    </form>
+
+    <!-- Modify the list in index.html to include Delete buttons -->
+    <ul>
+        {% for task in tasks %}
+            <li>
+                <input type="checkbox" id="{{ task.id }}" name="taskCheckbox" value="{{ task.id }}">
+                <label for="{{ task.id }}">{{ task.start.dateTime }}: {{ task.summary }}</label>
+                {% if 'Completed' in task %}
+                    <button type="button" onclick="deleteTask({{ task.id }})">Delete</button>
+                {% endif %}
+            </li>
+        {% endfor %}
+    </ul>
+
+    <script>
+        function deleteTask(index) {
+            document.getElementById('taskCheckbox-' + index).checked = false;
+            document.forms[0].submit();
+        }
+    </script>
+</body>
+</html>

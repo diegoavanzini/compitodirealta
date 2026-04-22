@@ -86,9 +86,12 @@ pytest -q
 - [x] creazione evento su calendario primary
 - [x] test unitari moduli storici
 - [x] Makefile (`run`, `test`, `clean`)
-- [ ] modifica evento Google Calendar
-- [ ] cancellazione evento Google Calendar
-- [ ] interfaccia web per inserimento
+- [x] cancellazione evento Google Calendar
+- [x] interfaccia web per inserimento
+- [x] collegamento interfaccia web con CRUD con integrazione calendario
+- [ ] aggiungi evento con data, titolo e descrizione
+- [ ] cancella evento
+- [ ] modifica evento
 - [ ] configurazione sistemi di notifica
 - [ ] notifiche ricorrenti avanzate
 - [ ] integrazione email

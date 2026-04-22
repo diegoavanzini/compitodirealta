@@ -1,7 +1,7 @@
 .PHONY: run test clean
 
 run:
-	python main.py
+	python app.py
 
 test:
 	pytest -q
