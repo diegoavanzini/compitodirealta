@@ -16,8 +16,9 @@ def add_task():
     task_title = request.form.get('title')
     task_description = request.form.get('description')
     task_when = request.form.get('when')
-    if task_when:
-        cal.add_event(task_title, task_description, task_when)
+    task_email = request.form.get('email')
+    print(f'task_email:{task_email}')
+    cal.add_event(task_title, task_description, task_when)
     return redirect(url_for('index'))
 
 @app.route('/complete', methods=['POST'])
@@ -40,3 +41,4 @@ def delete_tasks():
 
 if __name__ == '__main__':
     app.run(port=8000, debug=True)
+

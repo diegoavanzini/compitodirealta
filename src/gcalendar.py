@@ -37,11 +37,13 @@ class google_calendar():
             print(f"An error occurred: {error}")
 
     def add_event(self, title, description, input_date):
-        startDate = datetime.datetime.strptime(input_date, "%d/%m/%Y %H:%M").date()
-        endDate = startDate - datetime.timedelta(minutes=30)
+        cdrCalendarId = self.create_calendar_if_not_exists("cdr")
+        startDate = datetime.datetime.strptime(input_date, "%d/%m/%Y %H:%M")
+
+        endDate = startDate + datetime.timedelta(minutes=30)
         event = {
-            'summary': title,
-            # 'location': '800 Howard St., San Francisco, CA 94103',
+            'summary':  title,
+            'location': 'via Della Castella, 14 26100 Cremona',
             'description': description,
             'start': {
                 'dateTime':  startDate.strftime("%Y-%m-%dT%H:%M:%S-02:00"), 
@@ -67,17 +69,17 @@ class google_calendar():
                 ],
             },
         }
-
-        return self.service.events().insert(calendarId='primary', body=event).execute() 
+        return self.service.events().insert(calendarId=cdrCalendarId, body=event).execute() 
     
     def get_events(self, howMany):
         # Call the Calendar API
+        cdrCalendarId = self.create_calendar_if_not_exists("cdr")
         now = datetime.datetime.now(tz=datetime.timezone.utc).isoformat()
         print("Getting the upcoming 10 events")
         events_result = (
             self.service.events()
             .list(
-                calendarId="primary",
+                calendarId=cdrCalendarId,
                 timeMin=now,
                 maxResults=howMany,
                 singleEvents=True,
@@ -87,13 +89,29 @@ class google_calendar():
         )
         events = events_result.get("items", [])
 
-        if not events:
-            return
-
         # Prints the start and name of the next 10 events
         return events
         # for event in events:
         #  start = event["start"].get("dateTime", event["start"].get("date"))
+    def create_calendar_if_not_exists(self, calendar_summary, time_zone='UTC'):
+        # 1. List all calendars
+        calendars_result = self.service.calendarList().list().execute()
+        calendars = calendars_result.get('items', [])
+        
+        # 2. Check if a calendar with the given summary already exists
+        for calendar in calendars:
+            if calendar.get('summary') == calendar_summary:
+                print(f"Calendar '{calendar_summary}' already exists with ID: {calendar['id']}")
+                return calendar['id']
+        
+        # 3. If not found, create a new calendar
+        new_calendar = {
+            'summary': calendar_summary,
+            'timeZone': time_zone
+        }
+        created_calendar = self.service.calendars().insert(body=new_calendar).execute()
+        print(f"Created new calendar '{calendar_summary}' with ID: {created_calendar['id']}")
+        return created_calendar['id']        
     def delete_event(self, event_id):
         event = self.service.events().delete(calendarId='primary', eventId=event_id).execute()
         print(f"Event {event['id']} modified successfully.")

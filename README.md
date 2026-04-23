@@ -90,12 +90,11 @@ pytest -q
 - [x] interfaccia web per inserimento
 - [x] collegamento interfaccia web con CRUD con integrazione calendario
 - [x] aggiungi evento con data, titolo e descrizione
-- [ ] mostrare solo eventi inseriti da qui
+- [x] mostrare solo eventi inseriti da qui
+- [ ] possibilitá di aggiungere invitati
 - [ ] cancella evento
 - [ ] modifica evento
 - [ ] aggiungi multi lingua
 - [ ] configurazione sistemi di notifica
 - [ ] notifiche ricorrenti avanzate
-- [ ] integrazione email
 - [ ] integrazione Alexa
-- [ ] notifica multi-utente
