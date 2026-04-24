@@ -1,8 +1,52 @@
 from flask import Flask, render_template, request, redirect, url_for
 from src import gcalendar
+import gettext
+import os
 import datetime
+import sys
+import getopt
+
+def main(argv):
+    try:
+        # 'p:' means -p requires a value
+        opts, args = getopt.getopt(argv, "l:", ["param="])
+    except getopt.GetoptError:
+        sys.exit(2)
+    _ = setup_localization("it")
+    for opt, arg in opts:
+        if opt in ("-l", "--language"):
+            # Set up localization
+            print(f"Received parameter: {arg}")
+            _ = setup_localization(arg)
+
 
 app = Flask(__name__)
+
+@app.template_filter('format_date')
+def format_date_filter(value):
+    if value is None:
+        return ""
+    # 2026-04-24T13:24:00Z
+    return datetime.datetime.strptime(value, "%Y-%m-%dT%H:%M:%SZ").strftime('%d-%m-%Y %H:%M')
+
+@app.template_filter('translate')
+def translate_filter(value):
+    if value is None:
+        return ""
+    return _(value)
+
+# Set up localization
+def setup_localization(language):
+    # Define the path to the locale directory
+    localedir = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'locale')
+    print(localedir)
+    # Install the selected language
+    translation = gettext.translation('messages', localedir, languages=[language], fallback=True)
+    translation.install()
+    
+    # Return the translation function
+    return translation.gettext
+
 
 # Sample tasks for demonstration
 cal = gcalendar.google_calendar()
@@ -40,5 +84,8 @@ def delete_tasks():
     return redirect(url_for('index'))
 
 if __name__ == '__main__':
+    # For now, hardcode to Spanish for testing
+    main(sys.argv[1:])
+    print(_("Attendees"))
     app.run(port=8000, debug=True)
 
