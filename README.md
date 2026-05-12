@@ -89,12 +89,12 @@ pytest -q
 - [x] cancellazione evento Google Calendar
 - [x] interfaccia web per inserimento
 - [x] collegamento interfaccia web con CRUD con integrazione calendario
+- [x] aggiungi multi lingua
 - [x] aggiungi evento con data, titolo e descrizione
 - [x] mostrare solo eventi inseriti da qui
-- [ ] possibilitá di aggiungere invitati
-- [ ] cancella evento
+- [x] possibilitá di aggiungere invitati
+- [x] cancella evento
 - [ ] modifica evento
-- [ ] aggiungi multi lingua
 - [ ] configurazione sistemi di notifica
 - [ ] notifiche ricorrenti avanzate
 - [ ] integrazione Alexa

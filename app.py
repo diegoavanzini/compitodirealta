@@ -60,9 +60,9 @@ def add_task():
     task_title = request.form.get('title')
     task_description = request.form.get('description')
     task_when = request.form.get('when')
-    task_email = request.form.get('email')
-    print(f'task_email:{task_email}')
-    cal.add_event(task_title, task_description, task_when)
+    input_attendees_emails = request.form.get('attendees')
+    print(f'task_email:{input_attendees_emails}')
+    cal.add_event(task_title, task_description, task_when, input_attendees_emails)
     return redirect(url_for('index'))
 
 @app.route('/complete', methods=['POST'])
@@ -73,19 +73,15 @@ def complete_tasks():
             cal.get_events[index - 1] += " - Completed"
     return redirect(url_for('index'))
 
-# Add a new route to handle task deletion
 @app.route('/delete', methods=['POST'])
-def delete_tasks():
-    tasks_to_delete = request.form.getlist('taskCheckbox')
-    tasks_to_delete.sort(reverse=True)  # Start deleting from the end to avoid index issues
-    for index in map(int, tasks_to_delete):
-        if 1 <= index <= len(cal.get_events):
-            cal.delete_event(index)
+def delete_task():
+    event_id = request.form.get('event_id')
+    if event_id:
+        cal.delete_event(event_id)
     return redirect(url_for('index'))
 
 if __name__ == '__main__':
     # For now, hardcode to Spanish for testing
     main(sys.argv[1:])
-    print(_("Attendees"))
     app.run(port=8000, debug=True)
 

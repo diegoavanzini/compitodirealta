@@ -36,31 +36,34 @@ class google_calendar():
         except HttpError as error:
             print(f"An error occurred: {error}")
 
-    def add_event(self, title, description, input_date):
+    def add_event(self, title, description, input_date, input_attendees_emails):
         cdrCalendarId = self.create_calendar_if_not_exists("cdr")
         startDate = datetime.datetime.strptime(input_date, "%d/%m/%Y %H:%M")
+        print(f"input_attendees_emails: {input_attendees_emails}")
 
+        attendees_list = input_attendees_emails.split(',')
+        attendees_list.append('diego.avanzini@gmail.com')
         endDate = startDate + datetime.timedelta(minutes=30)
+        startDateString = startDate.strftime("%Y-%m-%dT%H:%M:%S-02:00")
+        endDateString = endDate.strftime("%Y-%m-%dT%H:%M:%S-02:00")
+        location = "via Della Castella, 14 26100 Cremona"
         event = {
             'summary':  title,
-            'location': 'via Della Castella, 14 26100 Cremona',
+            'location': location,
             'description': description,
             'start': {
-                'dateTime':  startDate.strftime("%Y-%m-%dT%H:%M:%S-02:00"), 
+                'dateTime':  startDateString, 
                 'timeZone': 'Europe/Rome',
             },
             'end': {
-                'dateTime': endDate.strftime("%Y-%m-%dT%H:%M:%S-02:00"),
+                'dateTime': endDateString,
                 'timeZone': 'Europe/Rome',
             },
             'recurrence': [
                 'RRULE:FREQ=DAILY;COUNT=1'
             ],
             'attendees': [
-                {'email': 'd.avanzini@teamsystem.com'},
-                # {'email': 'iacopo.avanzini@gmail.com'},
-                # {'email': 'paolettafilomena@gmail.com'},
-            ],
+                          {'email': email.strip()} for email in attendees_list if email.strip()],
             'reminders': {
                 'useDefault': False,
                 'overrides': [
@@ -69,6 +72,34 @@ class google_calendar():
                 ],
             },
         }
+        # event = f"
+        #     'summary':  {title},
+        #     'location': {location},
+        #     'description': {description},
+        #     'start': {
+        #         'dateTime':  '{startDateString}', 
+        #         'timeZone': 'Europe/Rome',
+        #     },
+        #     'end': {
+        #         'dateTime': '{endDateString}',
+        #         'timeZone': 'Europe/Rome',
+        #     },
+        #     'recurrence': [
+        #         'RRULE:FREQ=DAILY;COUNT=1'
+        #     ],
+        #     'attendees': [
+        #         {attendees_list_string}
+        #     ],
+        #     'reminders': {
+        #         'useDefault': False,
+        #         'overrides': [
+        #         {'method': 'email', 'minutes': 24 * 60},
+        #         {'method': 'popup', 'minutes': 10},
+        #         ],
+        #     },
+        # }"
+        print(f"event: {event}")
+        
         return self.service.events().insert(calendarId=cdrCalendarId, body=event).execute() 
     
     def get_events(self, howMany):
@@ -113,5 +144,6 @@ class google_calendar():
         print(f"Created new calendar '{calendar_summary}' with ID: {created_calendar['id']}")
         return created_calendar['id']        
     def delete_event(self, event_id):
-        event = self.service.events().delete(calendarId='primary', eventId=event_id).execute()
-        print(f"Event {event['id']} modified successfully.")
+        cdrCalendarId = self.create_calendar_if_not_exists("cdr")
+        self.service.events().delete(calendarId=cdrCalendarId, eventId=event_id).execute()
+        print(f"Event {event_id} deleted successfully.")

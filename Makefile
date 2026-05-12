@@ -1,7 +1,13 @@
+LANGUAGE ?= it
+
+ifneq ($(strip $(LANGUAGE)),)
+RUN_ARGS += -l $(LANGUAGE)
+endif
+
 .PHONY: run test clean
 
 run:
-	python app.py
+	python app.py $(RUN_ARGS)
 
 test:
 	pytest -q
